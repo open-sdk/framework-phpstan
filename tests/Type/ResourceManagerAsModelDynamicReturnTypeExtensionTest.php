@@ -7,6 +7,7 @@ use OpenSdk\PhpStan\Type\ResourceManagerAsModelDynamicReturnTypeExtension as Ext
 use OpenSdk\Resource\Manager;
 use OpenSdk\Resource\Object\Model;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
+use PHPStan\Type\ObjectType;
 
 class ResourceManagerAsModelDynamicReturnTypeExtensionTest extends TestCase
 {
@@ -31,38 +32,35 @@ class ResourceManagerAsModelDynamicReturnTypeExtensionTest extends TestCase
 
 	public function testGetTypeFromMethodCallReturnsReflectionGetReturnTypeForNoArguments()
 	{
+		$type = $this->mockType();
+
 		$reflection = $this->mockMethodReflection('asModel');
 		$call = $this->mockMethodCall();
-		$type = $this->mockType();
 		$scope = $this->mockScope();
 
 		$reflection->method('getReturnType')
 			->willReturn($type);
-
-		$scope->expects($this->never())
-			->method('getType');
 
 		$this->assertSame($type, (new Extension)->getTypeFromMethodCall($reflection, $call, $scope));
 	}
 
 	public function testGetTypeFromMethodCallReturnsScopeGetTypeForArguments()
 	{
-		$argument = $this->mockNodeArgument(
-			$expression = $this->mockNodeExpression()
-		);
+		$expression = $this->mockNodeExpression();
+		$argument = $this->mockNodeArgument($expression);
+
+		$expression->class = Model::class;
 
 		$reflection = $this->mockMethodReflection('asModel');
 		$call = $this->mockMethodCall([$argument]);
-		$type = $this->mockType();
 		$scope = $this->mockScope();
 
 		$reflection->expects($this->never())
 			->method('getReturnType');
 
-		$scope->method('getType')
-			->with($expression)
-			->willReturn($type);
+		$type = (new Extension)->getTypeFromMethodCall($reflection, $call, $scope);
 
-		$this->assertSame($type, (new Extension)->getTypeFromMethodCall($reflection, $call, $scope));
+		$this->assertInstanceOf(ObjectType::class, $type);
+		$this->assertSame(Model::class, $type->getClassName());
 	}
 }
