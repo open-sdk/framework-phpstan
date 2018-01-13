@@ -8,6 +8,7 @@ use OpenSdk\Resource\Manager;
 use OpenSdk\Resource\Object\Model;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
+use PhpParser\Node\Expr\ClassConstFetch;
 
 class ResourceManagerAsModelDynamicReturnTypeExtensionTest extends TestCase
 {
@@ -46,6 +47,7 @@ class ResourceManagerAsModelDynamicReturnTypeExtensionTest extends TestCase
 
 	public function testGetTypeFromMethodCallReturnsScopeGetTypeForArguments()
 	{
+		/** @var ClassConstFetch */
 		$expression = $this->mockNodeExpression();
 		$argument = $this->mockNodeArgument($expression);
 
@@ -58,6 +60,7 @@ class ResourceManagerAsModelDynamicReturnTypeExtensionTest extends TestCase
 		$reflection->expects($this->never())
 			->method('getReturnType');
 
+		/** @var ObjectType */
 		$type = (new Extension)->getTypeFromMethodCall($reflection, $call, $scope);
 
 		$this->assertInstanceOf(ObjectType::class, $type);
