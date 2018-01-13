@@ -1,0 +1,54 @@
+{
+	"name": "open-sdk/framework-phpstan",
+	"type": "library",
+	"description": "Open SDK extensions for PHPStan",
+	"keywords": [
+		"open-sdk",
+		"phpstan"
+	],
+	"homepage": "https://github.com/open-sdk/framework-phpstan",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Cedric van Putten",
+			"email": "me@bycedric.com",
+			"homepage": "https://bycedric.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": "^7.1",
+		"open-sdk/framework": "^0.4.0",
+		"phpstan/phpstan": "^0.9.1"
+	},
+	"require-dev": {
+		"phpstan/phpstan-phpunit": "^0.9.3",
+		"phpunit/phpunit": "^6.5.5",
+		"squizlabs/php_codesniffer": "^3.2.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"OpenSdk\\PhpStan\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"OpenSdk\\PhpStan\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": [
+			"vendor/bin/phpstan analyse --level 4 --configuration phpstan.neon src tests",
+			"vendor/bin/phpunit",
+			"vendor/bin/phpcs"
+		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	}
+}

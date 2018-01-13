@@ -1,0 +1,5 @@
+services:
+	-
+		class: OpenSdk\PhpStan\Type\ResourceManagerAsModelDynamicReturnTypeExtension
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension
