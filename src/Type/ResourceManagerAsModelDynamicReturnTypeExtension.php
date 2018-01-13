@@ -8,6 +8,7 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
+use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 
 class ResourceManagerAsModelDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension
@@ -37,6 +38,9 @@ class ResourceManagerAsModelDynamicReturnTypeExtension implements DynamicMethodR
 			return $reflection->getReturnType();
 		}
 
-		return new ObjectType($call->args[0]->value->class);
+		/** @var ClassConstFetch */
+		$reference = $call->args[0]->value;
+
+		return new ObjectType($reference->class);
 	}
 }
